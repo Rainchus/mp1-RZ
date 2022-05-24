@@ -46,6 +46,7 @@ static void init_stack(void (*func)(void)) {
 
 /* fp entry point - init stack and call main function */
 ENTRY void _start(void){
+    
 
 	init_gp();
 	if(!ready){

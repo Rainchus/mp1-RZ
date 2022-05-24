@@ -4,11 +4,12 @@
 .create "../rom/mp1RZ.z64", 0
 .incbin "../rom/baserom.z64"
 
+.definelabel mallocPerm, 0x8003B6A4
 .definelabel SleepVProcess, 0x800635B4
-.definelabel PAYLOAD_ROM, 0x02800000
+.definelabel PAYLOAD_ROM, 0x02000000
 .definelabel PAYLOAD_RAM, 0x80400000
 .definelabel RZ_RAM,      PAYLOAD_RAM + 0x60
-.definelabel DMA_FUNC,    0x8001745C
+.definelabel DMA_FUNC,    0x80061FE8
 
 ;=================================================
 ; Base ROM Editing Region
@@ -17,9 +18,9 @@
 .headersize 0x7FFFF400
 .org 0x8005B6E4
 
-	lui   a0, hi(PAYLOAD_ROM)     ;payload rom: 0x02800000
-	li    a1, (END - PAYLOAD_RAM + PAYLOAD_ROM) ;payload end
-	lui   a2, hi(PAYLOAD_RAM)     ;payload ram: 0x80400000
+	lui   a0, hi(PAYLOAD_ROM)     ;payload rom: 0x02000000
+	lui   a1, hi(PAYLOAD_RAM)     ;payload ram: 0x80400000
+	li    a2, (END - PAYLOAD_RAM) ;payload end
 	jal   DMA_FUNC                ;dma
 	nop
 	j   init                    ;displaced boot routine
@@ -52,8 +53,6 @@ init: //displaced boot code
 	NOP
 
 .org RZ_RAM
-JAL 0x800635B4
-NOP
 .incbin "../bin/rz.bin"
 .align 8
 END:

@@ -7,7 +7,7 @@ OBJCOPY     = mips64-objcopy
 ARMIPS      = armips
 BUILDFILE   = build.asm
 
-ADDRESS     = 0x80400040
+ADDRESS     = 0x80400060
 CFLAGS      = -c -MMD -MP -std=gnu11 -Wall -ffunction-sections -fdata-sections -O1 -fno-reorder-blocks
 CPPFLAGS	= -DPACKAGE=$(PACKAGE) -DURL=$(URL)
 LDFLAGS     = -T rz-link.ld -nostartfiles -specs=nosys.specs -Wl,--gc-sections -Wl,--defsym,start=$(ADDRESS) 
@@ -15,7 +15,7 @@ SRCDIR      = src
 OBJDIR      = obj
 BINDIR      = bin
 CFILES      = *.c
-SFILES		= *.S
+SFILES		= *.s
 NAME        = rz
 CSRC       := $(foreach s,$(CFILES),$(wildcard $(SRCDIR)/$(s)))
 COBJ        = $(patsubst $(SRCDIR)/%,$(OBJDIR)/%.o,$(CSRC))
