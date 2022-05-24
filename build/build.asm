@@ -30,8 +30,8 @@
 ;graph thread main hook
 ;original function call will be displaced in c code. it takes no arguments
 //0x1B05C ROM
-.org 0x8001A45C
-J RZ_RAM
+.org 0x8001A3F4
+JAL RZ_RAM
 NOP
 
 ;=================================================

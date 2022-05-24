@@ -15,7 +15,7 @@ void rz_main(void){
 	char test_string[100]  = "hello, printing is working";
 	gfx_printf(10, 10, test_string);
 	gfx_finish();
-
+    //SleepVProcess();
 	pm_GameUpdate(); /* displaced function call - advances 1 game frame*/
 }
 
@@ -46,7 +46,7 @@ static void init_stack(void (*func)(void)) {
 
 /* fp entry point - init stack and call main function */
 ENTRY void _start(void){
-    
+
 
 	init_gp();
 	if(!ready){

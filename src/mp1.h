@@ -13,12 +13,12 @@ typedef struct{
 
 }gfx_t;
 
-
-#define disp_buf (*(gfx_t*)    0x8009A64C)
-#define pm_GameUpdate_addr     0x801181D4
+#define disp_buf (*(gfx_t*)    0x800F37DC)
+#define pm_GameUpdate_addr     0x8001DFC0
 
 /*function prototypes*/
 typedef void (*pm_GameUpdate_t) ();
+//extern void SleepVProcess(void);
 
 /*functions*/
 #define pm_GameUpdate         ((pm_GameUpdate_t)  pm_GameUpdate_addr)
