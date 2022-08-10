@@ -1,26 +1,37 @@
-#ifndef _PM64_H
-#define _PM64_H
+#ifndef _MP1_H
+#define _MP1_H
 #include <n64.h>
 #include <stdint.h>
 
 #define PM64_SCREEN_WIDTH    320
 #define PM64_SCREEN_HEIGHT   240
 
+typedef struct {
+    char            unk_0x00[0x230];            /* 0x00000 */
+    Gfx             buf[0x2000];                /* 0x00230 */
+    Gfx             buf_work[0x200];            /* 0x10230 */
+    Mtx             unk_mtx[0x200];             /* 0x11230 */
+                                                /* size: 0x19230 */
+}disp_buf_t;
+
 typedef struct{
-    Gfx *p;
-    uint32_t unk;
-    Gfx *buf;
+    Gfx             *p;                         /* 0x00000 */
+    uint32_t        unk;                        /* 0x00004 */
+    disp_buf_t      *disp_buf;                  /* 0x00008 */
+                                                /* size: 0x0000C */
+}gfx_ctxt_t;
 
-}gfx_t;
+/* Addresses */
+#define mp1_gfx_addr            0x800F37DC
+#define mp1_GameUpdate_addr     0x8006257C
 
-#define disp_buf (*(gfx_t*)    0x800F37DC)
-#define pm_GameUpdate_addr     0x8001DFC0
+/* Data */
+#define mp1_gfx                (*(gfx_ctxt_t*)      mp1_gfx_addr)
 
-/*function prototypes*/
-typedef void (*pm_GameUpdate_t) ();
-//extern void SleepVProcess(void);
+/*Function Prototypes*/
+typedef void (*mp1_GameUpdate_t) (gfx_ctxt_t);
 
-/*functions*/
-#define pm_GameUpdate         ((pm_GameUpdate_t)  pm_GameUpdate_addr)
+/*Functions*/
+#define mp1_GameUpdate         ((mp1_GameUpdate_t)  mp1_GameUpdate_addr)
 
 #endif
