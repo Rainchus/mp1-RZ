@@ -6,7 +6,7 @@
 
 .definelabel mallocPerm, 0x8003B6A4
 .definelabel SleepVProcess, 0x800635B4
-.definelabel PAYLOAD_ROM, 0x02800000
+.definelabel PAYLOAD_ROM, 0x02000000
 .definelabel PAYLOAD_RAM, 0x80400000
 .definelabel RZ_RAM,      PAYLOAD_RAM + 0x40
 .definelabel DMA_FUNC,    0x80061FE8
