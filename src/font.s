@@ -3,5 +3,6 @@
 .global _raw_font
 
 _raw_font: 
-    .align 3
-    .incbin "res/testfont.bin"
+    .align 4
+    .incbin "res/font.bin"
+    

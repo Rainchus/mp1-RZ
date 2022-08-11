@@ -1,14 +1,14 @@
 .n64
 .relativeinclude on
 
-.create "../rom/mp1RZ.z64", 0
-.incbin "../rom/baserom.z64"
+.create "rom/mp1RZ.z64", 0
+.incbin "rom/base.z64"
 
 .definelabel mallocPerm, 0x8003B6A4
 .definelabel SleepVProcess, 0x800635B4
 .definelabel PAYLOAD_ROM, 0x02000000
 .definelabel PAYLOAD_RAM, 0x80400000
-.definelabel RZ_RAM,      PAYLOAD_RAM + 0x60
+.definelabel RZ_RAM,      PAYLOAD_RAM + 0x40
 .definelabel DMA_FUNC,    0x80061FE8
 
 ;=================================================
@@ -30,7 +30,8 @@
 ;graph thread main hook
 ;original function call will be displaced in c code. it takes no arguments
 //0x1B05C ROM
-.org 0x8001A3F4
+.headersize 0x7FFFF400
+.org 0x80025348
 JAL RZ_RAM
 NOP
 
@@ -53,7 +54,7 @@ init: //displaced boot code
 	NOP
 
 .org RZ_RAM
-.incbin "../bin/rz.bin"
+.incbin "bin/rz.bin"
 .align 8
 END:
 .close
