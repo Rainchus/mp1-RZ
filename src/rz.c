@@ -7,6 +7,9 @@
 #include "rz.h"
 #include "mp1.h"
 #include "gfx.h"
+#include "menu.h"
+
+extern void menu_init(struct menu *menu, s32 cell_width, s32 cell_height, struct gfx_font *font);
 
 __attribute__((section(".data")))
 rz_ctxt_t rz = { 
@@ -14,24 +17,22 @@ rz_ctxt_t rz = {
 };
 
 void rz_main(void){
-
-    
     gfx_begin();
-
 
     gfx_printf(10,10,"hello, printing is working",10,10);
     
-
     gfx_finish();    /*output gfx display lists*/
     mp1_GameUpdate(mp1_gfx); /* displaced function call - advances 1 game frame*/
-    
-
 }
 
 void init(){
     clear_bss();
     do_global_ctors();
     gfx_init();
+    //init menus
+    static struct menu main_menu;
+
+    menu_init(&main_menu, MENU_NOVALUE, MENU_NOVALUE, MENU_NOVALUE);
     rz.ready = 1;
 
 }

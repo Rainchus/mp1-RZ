@@ -14,6 +14,12 @@ static Gfx *gfx_disp_p;
 static Gfx *gfx_disp_d;
 static Gfx *gfx_disp_work;
 
+#define GFX_STACK_LENGTH 8
+static u64 gfx_modes[GFX_MODE_ALL];
+static u64 gfx_mode_stack[GFX_MODE_ALL][GFX_STACK_LENGTH];
+static s32 gfx_mode_stack_pos[GFX_MODE_ALL];
+static _Bool gfx_synced;
+
 extern char _raw_font[];
 gfx_font *kfont;
 
@@ -200,4 +206,81 @@ void gfx_printchars(gfx_font *font, uint16_t x, uint16_t y, uint32_t color, cons
                          qu510(1), qu510(1));
         }
     }
+}
+
+void gfx_mode_configure(enum gfx_mode mode, u64 value) {
+    gfx_modes[mode] = value;
+}
+
+void gfx_mode_apply(enum gfx_mode mode) {
+    Gfx dl[GFX_MODE_ALL];
+    Gfx *pdl = dl;
+    switch (mode) {
+        case GFX_MODE_ALL:
+        case GFX_MODE_FILTER: {
+            gDPSetTextureFilter(pdl++, gfx_modes[GFX_MODE_FILTER]);
+            if (mode != GFX_MODE_ALL) {
+                break;
+            }
+        }
+        case GFX_MODE_COMBINE: {
+            gDPSetCombine(pdl++, gfx_modes[GFX_MODE_COMBINE]);
+            if (mode != GFX_MODE_ALL) {
+                break;
+            }
+        }
+        case GFX_MODE_COLOR: {
+            u32 c = gfx_modes[GFX_MODE_COLOR];
+            gDPSetPrimColor(pdl++, 0, 0, (c >> 24) & 0xFF, (c >> 16) & 0xFF, (c >> 8) & 0xFF, (c >> 0) & 0xFF);
+            if (mode != GFX_MODE_ALL) {
+                break;
+            }
+        }
+        default: break;
+    }
+    size_t s = pdl - dl;
+    if (s > 0) {
+        gfx_sync();
+        memcpy(gfx_disp_p, dl, s * sizeof(*dl));
+        gfx_disp_p += s;
+    }
+}
+
+void gfx_mode_set(enum gfx_mode mode, u64 value) {
+    gfx_mode_configure(mode, value);
+    gfx_mode_apply(mode);
+}
+
+void gfx_mode_push(enum gfx_mode mode) {
+    if (mode == GFX_MODE_ALL) {
+        for (s32 i = 0; i < GFX_MODE_ALL; ++i) {
+            s32 *p = &gfx_mode_stack_pos[i];
+            gfx_mode_stack[i][*p] = gfx_modes[i];
+            *p = (*p + 1) % GFX_STACK_LENGTH;
+        }
+    } else {
+        s32 *p = &gfx_mode_stack_pos[mode];
+        gfx_mode_stack[mode][*p] = gfx_modes[mode];
+        *p = (*p + 1) % GFX_STACK_LENGTH;
+    }
+}
+
+void gfx_mode_pop(enum gfx_mode mode) {
+    if (mode == GFX_MODE_ALL) {
+        for (s32 i = 0; i < GFX_MODE_ALL; ++i) {
+            s32 *p = &gfx_mode_stack_pos[i];
+            *p = (*p + GFX_STACK_LENGTH - 1) % GFX_STACK_LENGTH;
+            gfx_mode_set(i, gfx_mode_stack[i][*p]);
+        }
+    } else {
+        s32 *p = &gfx_mode_stack_pos[mode];
+        *p = (*p + GFX_STACK_LENGTH - 1) % GFX_STACK_LENGTH;
+        gfx_mode_set(mode, gfx_mode_stack[mode][*p]);
+    }
+}
+
+void gfx_mode_replace(enum gfx_mode mode, u64 value) {
+    gfx_mode_push(mode);
+    gfx_mode_configure(mode, value);
+    gfx_mode_apply(mode);
 }

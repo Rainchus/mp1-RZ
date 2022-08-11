@@ -25,10 +25,20 @@ typedef struct{
     uint16_t cy_tile;
 } gfx_font;
 
+enum gfx_mode {
+    GFX_MODE_FILTER,
+    GFX_MODE_COMBINE,
+    GFX_MODE_COLOR,
+    GFX_MODE_DROPSHADOW,
+    GFX_MODE_TEXT,
+    GFX_MODE_ALL,
+};
+
 void gfx_init();
 void gfx_begin();
 void gfx_finish();
 void gfx_push(Gfx gfx);
+void gfx_mode_set(enum gfx_mode mode, u64 value);
 void gfx_printf(uint16_t,uint16_t,const char*,...);
 void gfx_printf_color(uint16_t,uint16_t,uint32_t,const char*,...);
 void gfx_printf_va_color(uint16_t,uint16_t,uint32_t,const char*,va_list);
