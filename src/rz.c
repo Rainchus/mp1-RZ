@@ -13,13 +13,13 @@ rz_ctxt_t rz = {
     .ready = 0, 
 };
 
+__attribute__((section(".data")))
 s32 calls = 0;
 
 ENTRY u8 rand8(void) {
-    u32* seedAddr = (u32*)0x800C2FF4;
-    *seedAddr = *seedAddr * 0x41C64E6D + 0x3039;
+    rnd_seed = rnd_seed * 0x41C64E6D + 0x3039;
     calls++;
-    return (*seedAddr + 1) >> 16;
+    return (rnd_seed + 1) >> 16;
 }
 
 u8 red = 0;
@@ -29,22 +29,20 @@ u8 alpha = 255;
 
 //test printing some things
 void rz_main(void){
-    unsigned int seed = *(unsigned int*)0x800C2FF4;
-    
     gfx_begin();
 
-    gfx_draw_rectangle(0, 0, 155, 25, GPACK_RGBA8888(0, 0, 0, 255));
+    //gfx_draw_rectangle(0, 0, 155, 25, GPACK_RGBA8888(0, 0, 0, 255));
 
-    gfx_printf_color(11,5, GPACK_RGBA8888(0, 0, 0, 255), "Seed: 0x%08X", seed);
-    gfx_printf_color(11,15, GPACK_RGBA8888(0, 0, 0, 255), "Calls: 0x%08X", calls);
+    gfx_printf_color(11,4, GPACK_RGBA8888(0, 0, 0, 255), "Seed: 0x%08X", rnd_seed);
+    gfx_printf_color(11,14, GPACK_RGBA8888(0, 0, 0, 255), "Calls: 0x%08X", calls);
 
     // gfx_printf_color(10,25,GPACK_RGBA8888(255, 255, 255, 255), "R: %d", red);
     // gfx_printf_color(10,35,GPACK_RGBA8888(255, 255, 255, 255), "G: %d", green);
     // gfx_printf_color(10,45,GPACK_RGBA8888(255, 255, 255, 255), "B: %d", blue);
     // gfx_printf_color(10,55,GPACK_RGBA8888(255, 255, 255, 255), "A: %d", alpha);
 
-    gfx_printf_color(10,5,GPACK_RGBA8888(0, 255, 255, 255), "Seed: 0x%08X", seed);
-    gfx_printf_color(10,15, GPACK_RGBA8888(0, 255, 255, 255), "Calls: 0x%08X", calls);
+    gfx_printf_color(10,5,GPACK_RGBA8888(255, 255, 255, 255), "Seed: 0x%08X", rnd_seed);
+    gfx_printf_color(10,15, GPACK_RGBA8888(255, 255, 255, 255), "Calls: 0x%08X", calls);
 
     gfx_finish();    /*output gfx display lists*/
     mp1_GameUpdate(mp1_gfx); /* displaced function call - advances 1 game frame*/
