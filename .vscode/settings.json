@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mp1.h": "c",
+        "*.tcc": "c"
+    }
+}

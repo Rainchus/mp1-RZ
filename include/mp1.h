@@ -1,10 +1,12 @@
 #ifndef _MP1_H
 #define _MP1_H
+
 #include <n64.h>
 #include <stdint.h>
+#include "types.h"
 
-#define PM64_SCREEN_WIDTH    320
-#define PM64_SCREEN_HEIGHT   240
+#define MP1_SCREEN_WIDTH    320
+#define MP1_SCREEN_HEIGHT   240
 
 typedef struct {
     char            unk_0x00[0x230];            /* 0x00000 */

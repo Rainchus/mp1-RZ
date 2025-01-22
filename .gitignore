@@ -1,3 +1,8 @@
 obj/
 bin/
 *.z64
+.ninja_deps
+.ninja_log
+armips.exe
+build.ninja
+build/

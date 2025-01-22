@@ -1,0 +1,6 @@
+osMemSize = 0x80000318;
+osPiRawStartDma = 0x80091E40;
+update_hook = 0x80025348;
+func_8006257C = 0x8006257C;
+unk_800F37DC = 0x800F37DC;
+rand8_hook = 0x8001758C;
